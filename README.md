@@ -23,3 +23,7 @@
 
 ## Full Tutorial With Video
 [Look Here](https://www.youtube.com/channel/UCQuvEsRUjhKZHZ0QAeZ6F8g)
+
+## Donation Via Saweria
+[Saweria](https://saweria.co/mdwi)
+EVM 0x7941Bb7dc36FbE8B2D88270bd50e43DEB8c678cB
