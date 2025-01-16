@@ -40,14 +40,14 @@ download_executor() {
     # Determine the OS type
     OS_TYPE=$(uname -s)
     if [ "$OS_TYPE" == "Linux" ]; then
-        FILE_NAME="executor-linux-v0.34.0.tar.gz"
+        FILE_NAME="executor-linux-v0.35.0.tar.gz"
     elif [ "$OS_TYPE" == "Darwin" ]; then
-        FILE_NAME="executor-macosx-v0.34.0.tar.gz"
+        FILE_NAME="executor-macosx-v0.35.0.tar.gz"
     else
         echo "Unsupported OS: $OS_TYPE"
         exit 1
     fi
-    DOWNLOAD_URL="https://github.com/t3rn/executor-release/releases/download/v0.34.0/$FILE_NAME"
+    DOWNLOAD_URL="https://github.com/t3rn/executor-release/releases/download/v0.35.0/$FILE_NAME"
     curl -L $DOWNLOAD_URL -o "$HOME_DIR/$FILE_NAME"
     process_message "Extracting Executor binary"
     tar -xzf "$HOME_DIR/$FILE_NAME" -C "$HOME_DIR"
