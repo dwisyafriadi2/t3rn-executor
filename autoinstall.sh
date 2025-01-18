@@ -97,54 +97,63 @@ configure_environment() {
     export PRIVATE_KEY_LOCAL=$PRIVATE_KEY_LOCAL
     echo "export PRIVATE_KEY_LOCAL=$PRIVATE_KEY_LOCAL" >> "$ZXC_FILE"
 
-    read -p "Do you want to enable all networks? (Y/n): " ENABLE_ALL
-    while [[ ! $ENABLE_ALL =~ ^[YyNn]$ ]]; do
-        echo "Invalid input. Please enter 'Y' or 'N'."
-        read -p "Do you want to enable all networks? (Y/n): " ENABLE_ALL
-    done
-    ENABLE_ALL=${ENABLE_ALL:-Y}
     ENABLED_NETWORKS=""
-    if [[ $ENABLE_ALL =~ ^[Yy]$ ]]; then
-        ENABLED_NETWORKS="arbitrum-sepolia,base-sepolia,blast-sepolia,optimism-sepolia,l1rn"
-    else
-        for NETWORK in "arbitrum-sepolia" "optimism-sepolia" "blast-sepolia" "base-sepolia"; do
-            read -p "Will you enable the $NETWORK network? (Y/n): " ENABLE_NETWORK
-            while [[ ! $ENABLE_NETWORK =~ ^[YyNn]$ ]]; do
-                echo "Invalid input. Please enter 'Y' or 'N'."
-                read -p "Will you enable the $NETWORK network? (Y/n): " ENABLE_NETWORK
-            done
-            ENABLE_NETWORK=${ENABLE_NETWORK:-Y}
-            if [[ $ENABLE_NETWORK =~ ^[Yy]$ ]]; then
-                if [ -z "$ENABLED_NETWORKS" ]; then
-                    ENABLED_NETWORKS="$NETWORK"
-                else
-                    ENABLED_NETWORKS="$ENABLED_NETWORKS,$NETWORK"
-                fi
-            fi
-        done
+
+    read -p "Do you want to enable arbitrum sepolia? (Y/n): " ENABLE_ARBITRUM
+    while [[ ! $ENABLE_ARBITRUM =~ ^[YyNn]$ ]]; do
+        echo "Invalid input. Please enter 'Y' or 'N'."
+        read -p "Do you want to enable arbitrum sepolia? (Y/n): " ENABLE_ARBITRUM
+    done
+    if [[ $ENABLE_ARBITRUM =~ ^[Yy]$ ]]; then
+        ENABLED_NETWORKS="arbitrum-sepolia"
+        export RPC_ENDPOINTS_ARBT='https://endpoints.omniatech.io/v1/arbitrum/sepolia/public'
+        echo "export RPC_ENDPOINTS_ARBT='https://endpoints.omniatech.io/v1/arbitrum/sepolia/public'" >> "$ZXC_FILE"
     fi
+
+    read -p "Do you want to enable base sepolia? (Y/n): " ENABLE_BASE
+    while [[ ! $ENABLE_BASE =~ ^[YyNn]$ ]]; do
+        echo "Invalid input. Please enter 'Y' or 'N'."
+        read -p "Do you want to enable base sepolia? (Y/n): " ENABLE_BASE
+    done
+    if [[ $ENABLE_BASE =~ ^[Yy]$ ]]; then
+        ENABLED_NETWORKS+="${ENABLED_NETWORKS:+,}base-sepolia"
+        export RPC_ENDPOINTS_BSSP='https://sepolia.base.org'
+        echo "export RPC_ENDPOINTS_BSSP='https://sepolia.base.org'" >> "$ZXC_FILE"
+    fi
+
+    read -p "Do you want to enable op sepolia? (Y/n): " ENABLE_OP
+    while [[ ! $ENABLE_OP =~ ^[YyNn]$ ]]; do
+        echo "Invalid input. Please enter 'Y' or 'N'."
+        read -p "Do you want to enable op sepolia? (Y/n): " ENABLE_OP
+    done
+    if [[ $ENABLE_OP =~ ^[Yy]$ ]]; then
+        ENABLED_NETWORKS+="${ENABLED_NETWORKS:+,}optimism-sepolia"
+        export RPC_ENDPOINTS_OPSP='https://endpoints.omniatech.io/v1/op/sepolia/public'
+        echo "export RPC_ENDPOINTS_OPSP='https://endpoints.omniatech.io/v1/op/sepolia/public'" >> "$ZXC_FILE"
+    fi
+
+    read -p "Do you want to enable blast sepolia? (Y/n): " ENABLE_BLAST
+    while [[ ! $ENABLE_BLAST =~ ^[YyNn]$ ]]; do
+        echo "Invalid input. Please enter 'Y' or 'N'."
+        read -p "Do you want to enable blast sepolia? (Y/n): " ENABLE_BLAST
+    done
+    if [[ $ENABLE_BLAST =~ ^[Yy]$ ]]; then
+        ENABLED_NETWORKS+="${ENABLED_NETWORKS:+,}blast-sepolia"
+        export RPC_ENDPOINTS_BLSS='https://endpoints.omniatech.io/v1/blast/sepolia/public'
+        echo "export RPC_ENDPOINTS_BLSS='https://endpoints.omniatech.io/v1/blast/sepolia/public'" >> "$ZXC_FILE"
+    fi
+
+    # Always enable l1rn
+    ENABLED_NETWORKS+="${ENABLED_NETWORKS:+,}l1rn"
+    export RPC_ENDPOINTS_L1RN='https://brn.rpc.caldera.xyz/'
+    echo "export RPC_ENDPOINTS_L1RN='https://brn.rpc.caldera.xyz/'" >> "$ZXC_FILE"
+
     export ENABLED_NETWORKS
     echo "export ENABLED_NETWORKS='$ENABLED_NETWORKS'" >> "$ZXC_FILE"
 
-    read -p "Do you want to use the default RPC URLs? (Y/n): " USE_DEFAULT_RPC
-    while [[ ! $USE_DEFAULT_RPC =~ ^[YyNn]$ ]]; do
-        echo "Invalid input. Please enter 'Y' or 'N'."
-        read -p "Do you want to use the default RPC URLs? (Y/n): " USE_DEFAULT_RPC
-    done
-    USE_DEFAULT_RPC=${USE_DEFAULT_RPC:-Y}
-    if [[ ! $USE_DEFAULT_RPC =~ ^[Yy]$ ]]; then
-        for NETWORK in "arbitrum-sepolia" "optimism-sepolia" "blast-sepolia" "base-sepolia"; do
-            if [[ $ENABLED_NETWORKS == *"$NETWORK"* ]]; then
-                read -p "Enter RPC URL for $NETWORK: " RPC_URL
-                NETWORK_SHORT=$(echo $NETWORK | cut -d'-' -f1 | tr '[:lower:]' '[:upper:]')
-                export RPC_ENDPOINTS_${NETWORK_SHORT}=$RPC_URL
-                echo "export RPC_ENDPOINTS_${NETWORK_SHORT}='$RPC_URL'" >> "$ZXC_FILE"
-            fi
-        done
-    fi
-
     export EXECUTOR_PROCESS_PENDING_ORDERS_FROM_API=true
     echo "export EXECUTOR_PROCESS_PENDING_ORDERS_FROM_API=true" >> "$ZXC_FILE"
+
     source "$ZXC_FILE"
     echo "Environment variables configured. To apply changes, run 'source ~/.zxc' or restart your terminal."
 }
