@@ -71,6 +71,7 @@ download_executor() {
 }
 
 # Function to configure environment variables
+# Function to configure environment variables
 configure_environment() {
     process_message "Configuring environment variables"
 
@@ -106,8 +107,18 @@ configure_environment() {
     done
     if [[ $ENABLE_ARBITRUM =~ ^[Yy]$ ]]; then
         ENABLED_NETWORKS="arbitrum-sepolia"
-        export RPC_ENDPOINTS_ARBT='https://endpoints.omniatech.io/v1/arbitrum/sepolia/public'
-        echo "export RPC_ENDPOINTS_ARBT='https://endpoints.omniatech.io/v1/arbitrum/sepolia/public'" >> "$ZXC_FILE"
+        read -p "Do you want to use a custom RPC for arbitrum sepolia? (Y/n): " USE_CUSTOM_ARBITRUM_RPC
+        while [[ ! $USE_CUSTOM_ARBITRUM_RPC =~ ^[YyNn]$ ]]; do
+            echo "Invalid input. Please enter 'Y' or 'N'."
+            read -p "Do you want to use a custom RPC for arbitrum sepolia? (Y/n): " USE_CUSTOM_ARBITRUM_RPC
+        done
+        if [[ $USE_CUSTOM_ARBITRUM_RPC =~ ^[Yy]$ ]]; then
+            read -p "Enter your custom RPC URL for arbitrum sepolia: " CUSTOM_ARBITRUM_RPC
+            export RPC_ENDPOINTS_ARBT=$CUSTOM_ARBITRUM_RPC
+        else
+            export RPC_ENDPOINTS_ARBT='https://endpoints.omniatech.io/v1/arbitrum/sepolia/public'
+        fi
+        echo "export RPC_ENDPOINTS_ARBT='$RPC_ENDPOINTS_ARBT'" >> "$ZXC_FILE"
     fi
 
     read -p "Do you want to enable base sepolia? (Y/n): " ENABLE_BASE
@@ -117,8 +128,18 @@ configure_environment() {
     done
     if [[ $ENABLE_BASE =~ ^[Yy]$ ]]; then
         ENABLED_NETWORKS+="${ENABLED_NETWORKS:+,}base-sepolia"
-        export RPC_ENDPOINTS_BSSP='https://sepolia.base.org'
-        echo "export RPC_ENDPOINTS_BSSP='https://sepolia.base.org'" >> "$ZXC_FILE"
+        read -p "Do you want to use a custom RPC for base sepolia? (Y/n): " USE_CUSTOM_BASE_RPC
+        while [[ ! $USE_CUSTOM_BASE_RPC =~ ^[YyNn]$ ]]; do
+            echo "Invalid input. Please enter 'Y' or 'N'."
+            read -p "Do you want to use a custom RPC for base sepolia? (Y/n): " USE_CUSTOM_BASE_RPC
+        done
+        if [[ $USE_CUSTOM_BASE_RPC =~ ^[Yy]$ ]]; then
+            read -p "Enter your custom RPC URL for base sepolia: " CUSTOM_BASE_RPC
+            export RPC_ENDPOINTS_BSSP=$CUSTOM_BASE_RPC
+        else
+            export RPC_ENDPOINTS_BSSP='https://sepolia.base.org'
+        fi
+        echo "export RPC_ENDPOINTS_BSSP='$RPC_ENDPOINTS_BSSP'" >> "$ZXC_FILE"
     fi
 
     read -p "Do you want to enable op sepolia? (Y/n): " ENABLE_OP
@@ -128,8 +149,18 @@ configure_environment() {
     done
     if [[ $ENABLE_OP =~ ^[Yy]$ ]]; then
         ENABLED_NETWORKS+="${ENABLED_NETWORKS:+,}optimism-sepolia"
-        export RPC_ENDPOINTS_OPSP='https://endpoints.omniatech.io/v1/op/sepolia/public'
-        echo "export RPC_ENDPOINTS_OPSP='https://endpoints.omniatech.io/v1/op/sepolia/public'" >> "$ZXC_FILE"
+        read -p "Do you want to use a custom RPC for op sepolia? (Y/n): " USE_CUSTOM_OP_RPC
+        while [[ ! $USE_CUSTOM_OP_RPC =~ ^[YyNn]$ ]]; do
+            echo "Invalid input. Please enter 'Y' or 'N'."
+            read -p "Do you want to use a custom RPC for op sepolia? (Y/n): " USE_CUSTOM_OP_RPC
+        done
+        if [[ $USE_CUSTOM_OP_RPC =~ ^[Yy]$ ]]; then
+            read -p "Enter your custom RPC URL for op sepolia: " CUSTOM_OP_RPC
+            export RPC_ENDPOINTS_OPSP=$CUSTOM_OP_RPC
+        else
+            export RPC_ENDPOINTS_OPSP='https://endpoints.omniatech.io/v1/op/sepolia/public'
+        fi
+        echo "export RPC_ENDPOINTS_OPSP='$RPC_ENDPOINTS_OPSP'" >> "$ZXC_FILE"
     fi
 
     read -p "Do you want to enable blast sepolia? (Y/n): " ENABLE_BLAST
@@ -139,8 +170,18 @@ configure_environment() {
     done
     if [[ $ENABLE_BLAST =~ ^[Yy]$ ]]; then
         ENABLED_NETWORKS+="${ENABLED_NETWORKS:+,}blast-sepolia"
-        export RPC_ENDPOINTS_BLSS='https://endpoints.omniatech.io/v1/blast/sepolia/public'
-        echo "export RPC_ENDPOINTS_BLSS='https://endpoints.omniatech.io/v1/blast/sepolia/public'" >> "$ZXC_FILE"
+        read -p "Do you want to use a custom RPC for blast sepolia? (Y/n): " USE_CUSTOM_BLAST_RPC
+        while [[ ! $USE_CUSTOM_BLAST_RPC =~ ^[YyNn]$ ]]; do
+            echo "Invalid input. Please enter 'Y' or 'N'."
+            read -p "Do you want to use a custom RPC for blast sepolia? (Y/n): " USE_CUSTOM_BLAST_RPC
+        done
+        if [[ $USE_CUSTOM_BLAST_RPC =~ ^[Yy]$ ]]; then
+            read -p "Enter your custom RPC URL for blast sepolia: " CUSTOM_BLAST_RPC
+            export RPC_ENDPOINTS_BLSS=$CUSTOM_BLAST_RPC
+        else
+            export RPC_ENDPOINTS_BLSS='https://endpoints.omniatech.io/v1/blast/sepolia/public'
+        fi
+        echo "export RPC_ENDPOINTS_BLSS='$RPC_ENDPOINTS_BLSS'" >> "$ZXC_FILE"
     fi
 
     # Always enable l1rn
@@ -157,6 +198,7 @@ configure_environment() {
     source "$ZXC_FILE"
     echo "Environment variables configured. To apply changes, run 'source ~/.zxc' or restart your terminal."
 }
+
 
 # Function to start Executor in the background
 start_executor() {
