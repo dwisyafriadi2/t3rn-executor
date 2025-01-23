@@ -186,8 +186,8 @@ configure_environment() {
 
     # Always enable l1rn
     ENABLED_NETWORKS+="${ENABLED_NETWORKS:+,}l1rn"
-    export RPC_ENDPOINTS_L1RN='https://brn.rpc.caldera.xyz/'
-    echo "export RPC_ENDPOINTS_L1RN='https://brn.rpc.caldera.xyz/'" >> "$ZXC_FILE"
+    export RPC_ENDPOINTS_L1RN='https://brn.rpc.caldera.xyz/http'
+    echo "export RPC_ENDPOINTS_L1RN='https://brn.rpc.caldera.xyz/http'" >> "$ZXC_FILE"
 
     export ENABLED_NETWORKS
     echo "export ENABLED_NETWORKS='$ENABLED_NETWORKS'" >> "$ZXC_FILE"
