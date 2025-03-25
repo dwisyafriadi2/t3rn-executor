@@ -19,6 +19,13 @@ check_root() {
     mkdir -p "$HOME_DIR/t3rn"
 }
 
+install_dependencies() {
+    process_message "Installing Node.js v22.14.0"
+    curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+    node -v
+}
+
 download_executor() {
     process_message "Downloading latest Executor binary"
     cd "$HOME_DIR/t3rn"
@@ -126,6 +133,7 @@ menu() {
 
     PS3="Select an option: "
     options=(
+        "Install Dependencies (Node.js v22.14.0)"
         "Download & Install Executor"
         "Configure Environment"
         "Create Systemd Service & Start"
@@ -138,27 +146,30 @@ menu() {
     select opt in "${options[@]}"; do
         case $REPLY in
             1)
-                download_executor
+                install_dependencies
                 ;;
             2)
-                configure_environment
+                download_executor
                 ;;
             3)
-                create_systemd_service
+                configure_environment
                 ;;
             4)
-                tail -f "$HOME_DIR/t3rn/executor.log"
+                create_systemd_service
                 ;;
             5)
-                start_service
+                tail -f "$HOME_DIR/t3rn/executor.log"
                 ;;
             6)
-                stop_service
+                start_service
                 ;;
             7)
-                uninstall_executor
+                stop_service
                 ;;
             8)
+                uninstall_executor
+                ;;
+            9)
                 break
                 ;;
             *)
