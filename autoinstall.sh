@@ -61,11 +61,11 @@ configure_environment() {
         read -p "Enter your custom RPC JSON: " CUSTOM_RPC
         echo "export RPC_ENDPOINTS='$CUSTOM_RPC'" >> "$ZXC_FILE"
     else
-        DEFAULT_RPC='{\
-"l2rn": ["https://b2n.rpc.caldera.xyz/http"],\
-"arbt": ["https://arbitrum-sepolia.drpc.org", "https://sepolia-rollup.arbitrum.io/rpc"],\
-"bast": ["https://base-sepolia-rpc.publicnode.com", "https://base-sepolia.drpc.org"],\
-"opst": ["https://sepolia.optimism.io", "https://optimism-sepolia.drpc.org"]\
+        DEFAULT_RPC='{
+"l2rn": ["https://b2n.rpc.caldera.xyz/http"],
+"arbt": ["https://arbitrum-sepolia.drpc.org", "https://sepolia-rollup.arbitrum.io/rpc"],
+"bast": ["https://base-sepolia-rpc.publicnode.com", "https://base-sepolia.drpc.org"],
+"opst": ["https://sepolia.optimism.io", "https://optimism-sepolia.drpc.org"]
 }'
         echo "export RPC_ENDPOINTS='$DEFAULT_RPC'" >> "$ZXC_FILE"
     fi
@@ -77,7 +77,7 @@ create_systemd_service() {
     process_message "Creating systemd service"
     SERVICE_FILE="/etc/systemd/system/t3rn-executor.service"
 
-    cat <<EOF | sudo tee \$SERVICE_FILE
+    cat <<EOF | sudo tee $SERVICE_FILE
 [Unit]
 Description=t3rn Executor Service
 After=network.target
@@ -100,27 +100,65 @@ EOF
     sudo systemctl start t3rn-executor
 }
 
+start_service() {
+    process_message "Starting t3rn-executor service"
+    sudo systemctl start t3rn-executor
+}
+
+stop_service() {
+    process_message "Stopping t3rn-executor service"
+    sudo systemctl stop t3rn-executor
+}
+
+uninstall_executor() {
+    process_message "Uninstalling Executor and removing systemd service"
+    sudo systemctl stop t3rn-executor
+    sudo systemctl disable t3rn-executor
+    sudo rm -f /etc/systemd/system/t3rn-executor.service
+    sudo systemctl daemon-reload
+    rm -rf "$HOME_DIR/t3rn"
+    echo "Executor uninstalled."
+}
+
 menu() {
     print_banner
     check_root
 
     PS3="Select an option: "
-    options=("Download & Install Executor" "Configure Environment" "Create Systemd Service & Start" "View Logs" "Exit")
+    options=(
+        "1. Download & Install Executor"
+        "2. Configure Environment"
+        "3. Create Systemd Service & Start"
+        "4. View Logs"
+        "5. Start Service"
+        "6. Stop Service"
+        "7. Uninstall Executor"
+        "8. Exit"
+    )
     select opt in "${options[@]}"; do
-        case $opt in
-            "Download & Install Executor")
+        case $REPLY in
+            1)
                 download_executor
                 ;;
-            "Configure Environment")
+            2)
                 configure_environment
                 ;;
-            "Create Systemd Service & Start")
+            3)
                 create_systemd_service
                 ;;
-            "View Logs")
+            4)
                 tail -f "$HOME_DIR/t3rn/executor.log"
                 ;;
-            "Exit")
+            5)
+                start_service
+                ;;
+            6)
+                stop_service
+                ;;
+            7)
+                uninstall_executor
+                ;;
+            8)
                 break
                 ;;
             *)
