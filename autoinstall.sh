@@ -48,7 +48,7 @@ download_executor() {
 
 configure_environment() {
     process_message "Configuring environment variables"
-    cp $HOME_DIR/.bashrc $HOME_DIR/.xzc
+    cp $HOME_DIR/.bashrc $HOME_DIR/.zxc
     ZXC_FILE="$HOME_DIR/.zxc"
 
     echo "export ENVIRONMENT=testnet" > "$ZXC_FILE"
