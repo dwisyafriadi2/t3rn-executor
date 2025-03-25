@@ -48,7 +48,8 @@ download_executor() {
 
 configure_environment() {
     process_message "Configuring environment variables"
-    ZXC_FILE="$HOME_DIR/t3rn/.executor_env"
+    cp $HOME_DIR/.bashrc $HOME_DIR/.xzc
+    ZXC_FILE="$HOME_DIR/.zxc"
 
     echo "export ENVIRONMENT=testnet" > "$ZXC_FILE"
     echo "export LOG_LEVEL=debug" >> "$ZXC_FILE"
@@ -78,6 +79,7 @@ configure_environment() {
     fi
 
     echo "export EXECUTOR_PROCESS_PENDING_ORDERS_FROM_API=true" >> "$ZXC_FILE"
+    source $HOME_DIR/.zxc
 }
 
 create_systemd_service() {
@@ -124,6 +126,8 @@ uninstall_executor() {
     sudo rm -f /etc/systemd/system/t3rn-executor.service
     sudo systemctl daemon-reload
     rm -rf "$HOME_DIR/t3rn"
+    rm -f "$HOME_DIR/.zxc"
+    source $HOME_DIR/.bashrc
     echo "Executor uninstalled."
 }
 
@@ -145,36 +149,16 @@ menu() {
     )
     select opt in "${options[@]}"; do
         case $REPLY in
-            1)
-                install_dependencies
-                ;;
-            2)
-                download_executor
-                ;;
-            3)
-                configure_environment
-                ;;
-            4)
-                create_systemd_service
-                ;;
-            5)
-                tail -f "$HOME_DIR/t3rn/executor.log"
-                ;;
-            6)
-                start_service
-                ;;
-            7)
-                stop_service
-                ;;
-            8)
-                uninstall_executor
-                ;;
-            9)
-                break
-                ;;
-            *)
-                echo "Invalid option"
-                ;;
+            1)install_dependencies;;
+            2)download_executor;;
+            3)configure_environment;;
+            4)create_systemd_service;;
+            5)tail -f "$HOME_DIR/t3rn/executor.log";;
+            6)start_service;;
+            7)stop_service;;
+            8)uninstall_executor;;
+            9)break;;
+            *)echo "Invalid option";;
         esac
     done
 }
