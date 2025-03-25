@@ -126,14 +126,14 @@ menu() {
 
     PS3="Select an option: "
     options=(
-        "1. Download & Install Executor"
-        "2. Configure Environment"
-        "3. Create Systemd Service & Start"
-        "4. View Logs"
-        "5. Start Service"
-        "6. Stop Service"
-        "7. Uninstall Executor"
-        "8. Exit"
+        "Download & Install Executor"
+        "Configure Environment"
+        "Create Systemd Service & Start"
+        "View Logs"
+        "Start Service"
+        "Stop Service"
+        "Uninstall Executor"
+        "Exit"
     )
     select opt in "${options[@]}"; do
         case $REPLY in
