@@ -1,6 +1,7 @@
 #!/bin/bash
 
 print_banner() {
+    curl -s https://raw.githubusercontent.com/dwisyafriadi2/logo/main/logo.sh | bash
     echo -e "\e[44mWelcome to the t3rn Executor Setup!\e[0m"
 }
 
